@@ -122,8 +122,23 @@ for plugin in $PLUGINS; do
 done
 
 zshrc_template "$HOME" "$THEME" "$plugin_list" > $HOME/.zshrc
+echo "source /workspace/.profile" >> $HOME/.zshrc
+
+echo
+echo "Checking for powerlevel10k"
 
 if [ "$THEME" = "powerlevel10k/powerlevel10k" ]; then
     git clone https://github.com/romkatv/powerlevel10k $HOME/.oh-my-zsh/custom/themes/powerlevel10k
     powerline10k_config >> $HOME/.zshrc
+
+    P10KCONFIG=/workspace/.p10k.zsh
+    if [ -f "$P10KCONFIG" ]; then
+        cat $P10KCONFIG > ~/.p10k.zsh
+        echo "source ~/.p10k.zsh" >> $HOME/.zshrc
+        echo "Loaded $P10KCONFIG"
+    else
+        echo "Did not find $P10KCONFIG"
+        echo "Script executed from: ${PWD}"
+        echo $(ls -a)
+    fi
 fi
